@@ -1,0 +1,134 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<section class="hero-dona">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1><i class="fa-solid fa-droplet me-2"></i>Dona Ahora</h1>
+                <p class="hero-slogan mb-4">"Una donación puede salvar una vida."</p>
+                <p class="mb-4 fs-5" style="max-width: 560px;">
+                    Conectamos a personas que necesitan sangre con donantes compatibles de forma rápida,
+                    segura y organizada. Únete a nuestra comunidad y ayuda a salvar vidas en tu ciudad.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Solicitante" asp-action="Crear" class="btn btn-dona-primary">
+                        <i class="fa-solid fa-hand-holding-medical me-2"></i>Necesito sangre
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-dona-outline">
+                        <i class="fa-solid fa-heart me-2"></i>Quiero donar
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+                <i class="fa-solid fa-hand-holding-droplet" style="font-size: 14rem; opacity: .18;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5">
+    <div class="row g-4" style="margin-top: -4.5rem;">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">@Model.TotalDonantes</div>
+                <div class="stat-label"><i class="fa-solid fa-users me-1"></i>Donantes registrados</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">@Model.TotalSolicitudesActivas</div>
+                <div class="stat-label"><i class="fa-solid fa-triangle-exclamation me-1"></i>Solicitudes activas</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">@Model.TotalVidasSalvadas</div>
+                <div class="stat-label"><i class="fa-solid fa-heart-pulse me-1"></i>Vidas impactadas</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">@Model.TotalCiudades</div>
+                <div class="stat-label"><i class="fa-solid fa-city me-1"></i>Ciudades cubiertas</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5">
+    <h2 class="section-title mb-4">¿Cómo funciona?</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card card-dona h-100 p-4">
+                <i class="fa-solid fa-user-plus text-danger fs-1 mb-3"></i>
+                <h5>1. Regístrate</h5>
+                <p class="text-muted mb-0">Crea tu cuenta como donante o solicitante en menos de un minuto.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-dona h-100 p-4">
+                <i class="fa-solid fa-magnifying-glass text-danger fs-1 mb-3"></i>
+                <h5>2. Encuentra o publica</h5>
+                <p class="text-muted mb-0">Publica tu necesidad de sangre o encuentra solicitudes compatibles contigo.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-dona h-100 p-4">
+                <i class="fa-solid fa-hand-holding-heart text-danger fs-1 mb-3"></i>
+                <h5>3. Ayuda y salva vidas</h5>
+                <p class="text-muted mb-0">Marca "Quiero ayudar" y coordina la donación de forma segura.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title mb-0">Solicitudes de sangre activas</h2>
+        <a asp-controller="Solicitudes" asp-action="Index" class="btn btn-outline-danger btn-sm">
+            Ver todas <i class="fa-solid fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    @if (Model.SolicitudesRecientes.Any())
+    {
+        <div class="row g-4">
+            @foreach (var s in Model.SolicitudesRecientes)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-dona h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge-sangre">@s.TipoSangre.ToDisplay()</span>
+                                <span class="badge urgencia-@s.Urgencia.ToString().ToLower()">@s.Urgencia</span>
+                            </div>
+                            <h6 class="fw-bold mb-1"><i class="fa-solid fa-hospital me-1 text-danger"></i>@s.Hospital</h6>
+                            <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-1"></i>@s.Ciudad</p>
+                            <p class="small mb-2"><i class="fa-solid fa-droplet me-1 text-danger"></i>@s.Cantidad unidad(es) necesarias</p>
+                            <p class="small text-muted mb-0"><i class="fa-regular fa-calendar me-1"></i>@s.Fecha.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-light border text-center py-4">
+            <i class="fa-solid fa-circle-info me-2 text-danger"></i>No hay solicitudes activas en este momento.
+        </div>
+    }
+</section>
+
+<section class="container my-5">
+    <div class="p-5 rounded-4 text-center text-white" style="background: linear-gradient(120deg, var(--rojo-oscuro), var(--rojo));">
+        <h3 class="fw-bold mb-3">Tu donación puede salvar hasta 3 vidas</h3>
+        <p class="mb-4">Regístrate como donante hoy mismo y forma parte de esta comunidad que salva vidas.</p>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-dona-primary">
+            <i class="fa-solid fa-heart me-2"></i>Quiero ser donante
+        </a>
+    </div>
+</section>

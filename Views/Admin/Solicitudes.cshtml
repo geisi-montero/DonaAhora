@@ -1,0 +1,62 @@
+@model List<Solicitud>
+@{
+    ViewData["Title"] = "Solicitudes";
+}
+
+<div class="dashboard-header">
+    <div class="container">
+        <h2 class="fw-bold mb-1"><i class="fa-solid fa-list me-2"></i>Todas las solicitudes</h2>
+        <p class="mb-0">Administra el estado de las solicitudes de sangre</p>
+    </div>
+</div>
+
+<div class="container">
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3"><i class="fa-solid fa-arrow-left me-1"></i>Volver</a>
+
+    <div class="table-responsive shadow-sm rounded-3 bg-white">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Solicitante</th>
+                    <th>Hospital</th>
+                    <th>Ciudad</th>
+                    <th>Urgencia</th>
+                    <th>Interesados</th>
+                    <th>Estado</th>
+                    <th>Cambiar estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td><span class="badge-sangre">@s.TipoSangre.ToDisplay()</span></td>
+                        <td>@s.Solicitante?.Nombre</td>
+                        <td>@s.Hospital</td>
+                        <td>@s.Ciudad</td>
+                        <td><span class="badge urgencia-@s.Urgencia.ToString().ToLower()">@s.Urgencia</span></td>
+                        <td>@s.Intereses.Count</td>
+                        <td>
+                            <span class="badge @(s.Estado == EstadoSolicitud.Activa ? "bg-success" : s.Estado == EstadoSolicitud.Completada ? "bg-secondary" : s.Estado == EstadoSolicitud.Cancelada ? "bg-dark" : "bg-warning text-dark")">
+                                @s.Estado
+                            </span>
+                        </td>
+                        <td>
+                            <form asp-controller="Admin" asp-action="CambiarEstadoSolicitud" method="post" class="d-flex gap-1">
+                                <input type="hidden" name="id" value="@s.Id" />
+                                <select name="nuevoEstado" class="form-select form-select-sm">
+                                    @foreach (var estado in Enum.GetValues<EstadoSolicitud>())
+                                    {
+                                        <option value="@estado" selected="@(s.Estado == estado)">@estado</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-danger">Guardar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

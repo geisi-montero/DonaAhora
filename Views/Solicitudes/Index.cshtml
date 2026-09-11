@@ -1,0 +1,85 @@
+@model SolicitudesFiltroViewModel
+@{
+    ViewData["Title"] = "Solicitudes de sangre";
+}
+
+<div class="dashboard-header text-center mb-4">
+    <div class="container">
+        <h2 class="fw-bold"><i class="fa-solid fa-droplet me-2"></i>Solicitudes de sangre activas</h2>
+        <p class="mb-0">Encuentra solicitudes compatibles contigo y ayuda a salvar una vida</p>
+    </div>
+</div>
+
+<div class="container">
+    <form method="get" class="row g-3 align-items-end mb-4 p-3 bg-white rounded-3 shadow-sm">
+        <div class="col-md-4">
+            <label class="form-label small fw-semibold">Tipo de sangre</label>
+            <select name="tipoSangre" class="form-select auto-filtro">
+                <option value="">Todos los tipos</option>
+                @foreach (var t in Enum.GetValues<TipoSangre>())
+                {
+                    <option value="@t" selected="@(Model.FiltroTipoSangre == t)">@t.ToDisplay()</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label small fw-semibold">Ciudad</label>
+            <select name="ciudad" class="form-select auto-filtro">
+                <option value="">Todas las ciudades</option>
+                @foreach (var c in Model.Ciudades)
+                {
+                    <option value="@c" selected="@(Model.FiltroCiudad == c)">@c</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-danger flex-fill"><i class="fa-solid fa-filter me-1"></i>Filtrar</button>
+            <a asp-controller="Solicitudes" asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    @if (Model.Solicitudes.Any())
+    {
+        <div class="table-responsive shadow-sm rounded-3 bg-white">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Hospital</th>
+                        <th>Ciudad</th>
+                        <th>Fecha</th>
+                        <th>Urgencia</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.Solicitudes)
+                    {
+                        <tr>
+                            <td><span class="badge-sangre">@s.TipoSangre.ToDisplay()</span></td>
+                            <td>
+                                <div class="fw-semibold">@s.Hospital</div>
+                                <div class="small text-muted">@s.Cantidad unidad(es)</div>
+                            </td>
+                            <td><i class="fa-solid fa-location-dot text-danger me-1"></i>@s.Ciudad</td>
+                            <td>@s.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td><span class="badge urgencia-@s.Urgencia.ToString().ToLower()">@s.Urgencia</span></td>
+                            <td><span class="badge bg-success">@s.Estado</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <p class="text-muted small mt-2">
+            <i class="fa-solid fa-circle-info me-1"></i>
+            Si eres donante, inicia sesión para ver tus solicitudes compatibles y ofrecer tu ayuda.
+        </p>
+    }
+    else
+    {
+        <div class="alert alert-light border text-center py-5">
+            <i class="fa-solid fa-magnifying-glass fs-2 text-danger mb-2 d-block"></i>
+            No se encontraron solicitudes con los filtros seleccionados.
+        </div>
+    }
+</div>

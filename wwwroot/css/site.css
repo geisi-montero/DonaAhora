@@ -1,0 +1,222 @@
+:root {
+    --rojo: #d61f30;
+    --rojo-oscuro: #a4111f;
+    --rojo-claro: #ff4d5e;
+    --gris-oscuro: #2b2b2b;
+    --gris: #6c757d;
+    --gris-claro: #f7f7f9;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background-color: var(--gris-claro);
+    color: var(--gris-oscuro);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navbar */
+.navbar-dona {
+    background: linear-gradient(90deg, var(--rojo-oscuro), var(--rojo));
+}
+
+.navbar-dona .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.navbar-dona .nav-link:hover {
+    color: #fff;
+}
+
+/* Footer */
+.footer-dona {
+    background-color: #1c1c1c;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+}
+
+.footer-link:hover {
+    color: #fff;
+}
+
+/* Hero */
+.hero-dona {
+    background: linear-gradient(120deg, var(--rojo-oscuro) 0%, var(--rojo) 55%, var(--rojo-claro) 100%);
+    color: #fff;
+    padding: 5rem 0 6rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-dona::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 55%);
+    pointer-events: none;
+}
+
+.hero-dona h1 {
+    font-weight: 800;
+    font-size: 2.75rem;
+}
+
+.hero-slogan {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: #ffe1e4;
+}
+
+.btn-dona-primary {
+    background-color: #fff;
+    color: var(--rojo-oscuro);
+    font-weight: 600;
+    border: none;
+    padding: .75rem 1.75rem;
+    border-radius: .6rem;
+    transition: .2s ease;
+}
+
+.btn-dona-primary:hover {
+    background-color: #ffe9ea;
+    color: var(--rojo-oscuro);
+    transform: translateY(-2px);
+}
+
+.btn-dona-outline {
+    border: 2px solid #fff;
+    color: #fff;
+    font-weight: 600;
+    padding: .7rem 1.75rem;
+    border-radius: .6rem;
+    background: transparent;
+    transition: .2s ease;
+}
+
+.btn-dona-outline:hover {
+    background-color: rgba(255,255,255,0.15);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Stats */
+.stat-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.75rem 1rem;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    border-top: 4px solid var(--rojo);
+    height: 100%;
+}
+
+.stat-card .stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--rojo);
+}
+
+.stat-card .stat-label {
+    color: var(--gris);
+    font-weight: 500;
+    font-size: .9rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+/* Cards genéricas */
+.card-dona {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.card-dona:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+}
+
+.badge-sangre {
+    background-color: var(--rojo);
+    color: #fff;
+    font-size: .95rem;
+    font-weight: 700;
+    padding: .45em .8em;
+    border-radius: .5rem;
+}
+
+.section-title {
+    font-weight: 800;
+    color: var(--gris-oscuro);
+    position: relative;
+    padding-bottom: .5rem;
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+    height: 4px;
+    background: var(--rojo);
+    border-radius: 4px;
+}
+
+.btn-danger, .bg-danger {
+    background-color: var(--rojo) !important;
+    border-color: var(--rojo) !important;
+}
+
+.btn-danger:hover {
+    background-color: var(--rojo-oscuro) !important;
+    border-color: var(--rojo-oscuro) !important;
+}
+
+.text-danger {
+    color: var(--rojo) !important;
+}
+
+.auth-card {
+    max-width: 520px;
+    margin: 3rem auto;
+    border-radius: 1.2rem;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
+
+.dashboard-header {
+    background: linear-gradient(90deg, var(--rojo-oscuro), var(--rojo));
+    color: #fff;
+    padding: 2.5rem 0;
+    border-radius: 0 0 1.5rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.table thead {
+    background-color: var(--gris-oscuro);
+    color: #fff;
+}
+
+.urgencia-critica { background-color: #b30000 !important; color:#fff; }
+.urgencia-alta { background-color: #e8590c !important; color:#fff; }
+.urgencia-media { background-color: #f0ad4e !important; color:#212529; }
+.urgencia-baja { background-color: #6c757d !important; color:#fff; }
+
+@media (max-width: 768px) {
+    .hero-dona h1 { font-size: 2rem; }
+    .hero-slogan { font-size: 1.05rem; }
+}

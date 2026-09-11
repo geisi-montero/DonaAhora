@@ -1,0 +1,98 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<div class="card card-dona auth-card" style="max-width: 620px;">
+    <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+            <i class="fa-solid fa-droplet text-danger fs-1"></i>
+            <h3 class="fw-bold mt-2">Crear cuenta</h3>
+            <p class="text-muted">Únete a la comunidad Dona Ahora</p>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <form asp-controller="Account" asp-action="Register" method="post" id="formRegistro">
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label">Nombre completo</label>
+                <input asp-for="Nombre" class="form-control" placeholder="Ej. María Pérez" />
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Email" class="form-label">Correo electrónico</label>
+                    <input asp-for="Email" class="form-control" placeholder="correo@ejemplo.com" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Telefono" class="form-label">Teléfono (opcional)</label>
+                    <input asp-for="Telefono" class="form-control" placeholder="809-000-0000" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Password" class="form-label">Contraseña</label>
+                    <input asp-for="Password" class="form-control" placeholder="Mínimo 6 caracteres" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label">Confirmar contraseña</label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label d-block">Quiero registrarme como:</label>
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" name="Rol" id="rolDonante" value="Donante" checked onclick="toggleDonanteFields()">
+                    <label class="btn btn-outline-danger" for="rolDonante"><i class="fa-solid fa-heart me-1"></i>Donante</label>
+
+                    <input type="radio" class="btn-check" name="Rol" id="rolSolicitante" value="Solicitante" onclick="toggleDonanteFields()">
+                    <label class="btn btn-outline-danger" for="rolSolicitante"><i class="fa-solid fa-hand-holding-medical me-1"></i>Solicitante</label>
+                </div>
+            </div>
+
+            <div id="camposDonante" class="row border rounded-3 p-3 mx-0 mb-3 bg-light">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <label asp-for="TipoSangre" class="form-label">Tipo de sangre</label>
+                    <select asp-for="TipoSangre" class="form-select">
+                        <option value="">Selecciona...</option>
+                        @foreach (var t in Enum.GetValues<TipoSangre>())
+                        {
+                            <option value="@t">@t.ToDisplay()</option>
+                        }
+                    </select>
+                    <span asp-validation-for="TipoSangre" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Ciudad" class="form-label">Ciudad</label>
+                    <input asp-for="Ciudad" class="form-control" placeholder="Ej. Santo Domingo" />
+                    <span asp-validation-for="Ciudad" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100 py-2 fw-semibold mt-2">
+                <i class="fa-solid fa-user-plus me-2"></i>Crear cuenta
+            </button>
+        </form>
+
+        <p class="text-center mt-4 mb-0 text-muted">
+            ¿Ya tienes cuenta? <a asp-controller="Account" asp-action="Login" class="text-danger fw-semibold">Inicia sesión</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function toggleDonanteFields() {
+            var esDonante = document.getElementById('rolDonante').checked;
+            document.getElementById('camposDonante').style.display = esDonante ? 'flex' : 'none';
+        }
+        document.addEventListener('DOMContentLoaded', toggleDonanteFields);
+    </script>
+}

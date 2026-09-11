@@ -1,0 +1,36 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Compilación
+bin/
+obj/
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+
+# Archivos generados
+*.cache
+*.pdb
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Configuración local
+appsettings.Local.json
+appsettings.*.Local.json

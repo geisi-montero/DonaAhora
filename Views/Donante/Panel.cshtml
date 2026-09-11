@@ -1,0 +1,164 @@
+@model DonantePanelViewModel
+@{
+    ViewData["Title"] = "Mi panel de donante";
+    var idsConInteres = ViewBag.IdsConInteres as List<int> ?? new List<int>();
+}
+
+<div class="dashboard-header">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="fa-solid fa-heart-pulse me-2"></i>Hola, @Model.Donante.Usuario?.Nombre</h2>
+            <p class="mb-0">Gracias por ser parte de la comunidad de donantes</p>
+        </div>
+        <a asp-controller="Donante" asp-action="Editar" class="btn btn-dona-primary mt-3 mt-md-0">
+            <i class="fa-solid fa-pen me-2"></i>Editar mi información
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-number">@Model.Donante.TipoSangre.ToDisplay()</div>
+                <div class="stat-label">Tipo de sangre</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-number"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="stat-label">@Model.Donante.Ciudad</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-number">
+                    @if (Model.Donante.Disponible)
+                    {
+                        <span class="text-success"><i class="fa-solid fa-circle-check"></i></span>
+                    }
+                    else
+                    {
+                        <span class="text-muted"><i class="fa-solid fa-circle-xmark"></i></span>
+                    }
+                </div>
+                <div class="stat-label">@(Model.Donante.Disponible ? "Disponible" : "No disponible")</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-card">
+                <div class="stat-number">@Model.Donante.TotalDonaciones</div>
+                <div class="stat-label">Donaciones realizadas</div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="section-title mb-4">Solicitudes compatibles contigo</h4>
+
+    @if (Model.SolicitudesCompatibles.Any())
+    {
+        <div class="row g-4 mb-5">
+            @foreach (var s in Model.SolicitudesCompatibles)
+            {
+                var yaMarcado = idsConInteres.Contains(s.Id);
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-dona h-100">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge-sangre">@s.TipoSangre.ToDisplay()</span>
+                                <span class="badge urgencia-@s.Urgencia.ToString().ToLower()">@s.Urgencia</span>
+                            </div>
+                            <h6 class="fw-bold mb-1"><i class="fa-solid fa-hospital me-1 text-danger"></i>@s.Hospital</h6>
+                            <p class="text-muted small mb-1"><i class="fa-solid fa-location-dot me-1"></i>@s.Ciudad</p>
+                            <p class="small mb-1"><i class="fa-regular fa-calendar me-1"></i>@s.Fecha.ToString("dd/MM/yyyy")</p>
+                            @if (!string.IsNullOrWhiteSpace(s.Descripcion))
+                            {
+                                <p class="small text-muted mb-2">@s.Descripcion</p>
+                            }
+                            <div class="mt-auto pt-2">
+                                @if (yaMarcado)
+                                {
+                                    <button class="btn btn-outline-success w-100" disabled>
+                                        <i class="fa-solid fa-check me-1"></i>Ya ofreciste tu ayuda
+                                    </button>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Donante" asp-action="QuieroAyudar" method="post" class="confirm-ayudar">
+                                        <input type="hidden" name="solicitudId" value="@s.Id" />
+                                        <button type="submit" class="btn btn-danger w-100">
+                                            <i class="fa-solid fa-hand-holding-heart me-1"></i>Quiero ayudar
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-light border text-center py-4 mb-5">
+            <i class="fa-solid fa-circle-info me-2 text-danger"></i>
+            No hay solicitudes compatibles con tu tipo de sangre por el momento.
+        </div>
+    }
+
+    <h4 class="section-title mb-4">Mis ofrecimientos de ayuda</h4>
+    @if (Model.MisIntereses.Any())
+    {
+        <div class="table-responsive shadow-sm rounded-3 bg-white mb-5">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Hospital</th>
+                        <th>Ciudad</th>
+                        <th>Tipo</th>
+                        <th>Fecha de interés</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model.MisIntereses)
+                    {
+                        <tr>
+                            <td>@i.Solicitud?.Hospital</td>
+                            <td>@i.Solicitud?.Ciudad</td>
+                            <td><span class="badge-sangre">@i.Solicitud?.TipoSangre.ToDisplay()</span></td>
+                            <td>@i.FechaInteres.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <span class="badge @(i.Estado == EstadoInteres.Confirmado ? "bg-success" : i.Estado == EstadoInteres.Cancelado ? "bg-dark" : "bg-secondary")">
+                                    @i.Estado
+                                </span>
+                                @if (i.Estado == EstadoInteres.Confirmado)
+                                {
+                                    <div class="small text-success mt-1">El solicitante te contactará</div>
+                                }
+                            </td>
+                            <td>
+                                @if (i.Estado == EstadoInteres.Pendiente)
+                                {
+                                    <form asp-controller="Donante" asp-action="CancelarInteres" method="post" onsubmit="return confirm('¿Cancelar tu interés en esta solicitud?');">
+                                        <input type="hidden" name="interesId" value="@i.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-xmark"></i> Cancelar
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-light border text-center py-4 mb-5">
+            Aún no has ofrecido ayuda en ninguna solicitud.
+        </div>
+    }
+</div>

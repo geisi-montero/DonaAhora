@@ -1,0 +1,48 @@
+@model Donante
+@{
+    ViewData["Title"] = "Editar información de donante";
+}
+
+<div class="container">
+    <div class="card card-dona mx-auto" style="max-width: 600px;">
+        <div class="card-body p-4">
+            <h4 class="fw-bold mb-4"><i class="fa-solid fa-user-pen text-danger me-2"></i>Editar mi información</h4>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <form asp-controller="Donante" asp-action="Editar" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="TipoSangre" class="form-label">Tipo de sangre</label>
+                    <select asp-for="TipoSangre" class="form-select">
+                        @foreach (var t in Enum.GetValues<TipoSangre>())
+                        {
+                            <option value="@t" selected="@(Model.TipoSangre == t)">@t.ToDisplay()</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Ciudad" class="form-label">Ciudad</label>
+                    <input asp-for="Ciudad" class="form-control" />
+                    <span asp-validation-for="Ciudad" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check form-switch mb-4">
+                    <input class="form-check-input" type="checkbox" asp-for="Disponible" role="switch">
+                    <label class="form-check-label" asp-for="Disponible">Estoy disponible para donar</label>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger flex-fill"><i class="fa-solid fa-floppy-disk me-1"></i>Guardar cambios</button>
+                    <a asp-controller="Donante" asp-action="Panel" class="btn btn-outline-secondary flex-fill">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

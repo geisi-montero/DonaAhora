@@ -1,0 +1,46 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="card card-dona auth-card">
+    <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+            <i class="fa-solid fa-droplet text-danger fs-1"></i>
+            <h3 class="fw-bold mt-2">Iniciar sesión</h3>
+            <p class="text-muted">Bienvenido de nuevo a Dona Ahora</p>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <form asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Correo electrónico</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="fa-solid fa-envelope text-danger"></i></span>
+                    <input asp-for="Email" class="form-control" placeholder="correo@ejemplo.com" />
+                </div>
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for="Password" class="form-label">Contraseña</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="fa-solid fa-lock text-danger"></i></span>
+                    <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                </div>
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <button type="submit" class="btn btn-danger w-100 py-2 fw-semibold">
+                <i class="fa-solid fa-right-to-bracket me-2"></i>Ingresar
+            </button>
+        </form>
+
+        <p class="text-center mt-4 mb-0 text-muted">
+            ¿No tienes cuenta? <a asp-controller="Account" asp-action="Register" class="text-danger fw-semibold">Regístrate aquí</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

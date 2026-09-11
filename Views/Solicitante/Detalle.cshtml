@@ -1,0 +1,117 @@
+@model Solicitud
+@{
+    ViewData["Title"] = "Detalle de solicitud";
+}
+
+<div class="container">
+    <div class="card card-dona mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between flex-wrap align-items-start mb-3">
+                <div>
+                    <span class="badge-sangre fs-6">@Model.TipoSangre.ToDisplay()</span>
+                    <span class="badge urgencia-@Model.Urgencia.ToString().ToLower() ms-2">@Model.Urgencia</span>
+                </div>
+                <span class="badge @(Model.Estado == EstadoSolicitud.Activa ? "bg-success" : Model.Estado == EstadoSolicitud.Completada ? "bg-secondary" : Model.Estado == EstadoSolicitud.Cancelada ? "bg-dark" : "bg-warning text-dark")">
+                    @Model.Estado
+                </span>
+            </div>
+            <h4 class="fw-bold"><i class="fa-solid fa-hospital text-danger me-2"></i>@Model.Hospital</h4>
+            <div class="row mt-3">
+                <div class="col-md-4 mb-2"><i class="fa-solid fa-location-dot text-danger me-1"></i>@Model.Ciudad</div>
+                <div class="col-md-4 mb-2"><i class="fa-regular fa-calendar text-danger me-1"></i>@Model.Fecha.ToString("dd/MM/yyyy")</div>
+                <div class="col-md-4 mb-2"><i class="fa-solid fa-flask text-danger me-1"></i>@Model.Cantidad unidad(es)</div>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.Descripcion))
+            {
+                <p class="mt-3 text-muted">@Model.Descripcion</p>
+            }
+            <div class="d-flex gap-2 mt-2 flex-wrap">
+                <a asp-controller="Solicitante" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa-solid fa-arrow-left me-1"></i>Volver
+                </a>
+                @if (Model.Estado != EstadoSolicitud.Completada)
+                {
+                    <a asp-controller="Solicitante" asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">
+                        <i class="fa-solid fa-pen me-1"></i>Editar
+                    </a>
+                    <form asp-controller="Solicitante" asp-action="Eliminar" method="post" onsubmit="return confirm('¿Seguro que quieres eliminar esta solicitud? Esta acción no se puede deshacer.');">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="fa-solid fa-trash me-1"></i>Eliminar
+                        </button>
+                    </form>
+                }
+                @if (Model.Estado == EstadoSolicitud.Activa || Model.Estado == EstadoSolicitud.EnProceso)
+                {
+                    <form asp-controller="Solicitante" asp-action="MarcarCompletada" method="post" onsubmit="return confirm('¿Marcar esta solicitud como completada?');">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-outline-success btn-sm">
+                            <i class="fa-solid fa-circle-check me-1"></i>Marcar como completada
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+
+    <h5 class="section-title mb-3">Donantes que ofrecieron ayuda</h5>
+
+    @if (Model.Intereses.Any())
+    {
+        <div class="table-responsive shadow-sm rounded-3 bg-white">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo de sangre</th>
+                        <th>Teléfono</th>
+                        <th>Fecha de interés</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model.Intereses)
+                    {
+                        <tr>
+                            <td>@i.Donante?.Usuario?.Nombre</td>
+                            <td><span class="badge-sangre">@i.Donante?.TipoSangre.ToDisplay()</span></td>
+                            <td>@(i.Donante?.Usuario?.Telefono ?? "No disponible")</td>
+                            <td>@i.FechaInteres.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <span class="badge @(i.Estado == EstadoInteres.Confirmado ? "bg-success" : i.Estado == EstadoInteres.Cancelado ? "bg-dark" : "bg-secondary")">
+                                    @i.Estado
+                                </span>
+                            </td>
+                            <td>
+                                @if (i.Estado == EstadoInteres.Pendiente)
+                                {
+                                    <div class="d-flex gap-1">
+                                        <form asp-controller="Solicitante" asp-action="ConfirmarAyuda" method="post">
+                                            <input type="hidden" name="interesId" value="@i.Id" />
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="fa-solid fa-check"></i> Aceptar
+                                            </button>
+                                        </form>
+                                        <form asp-controller="Solicitante" asp-action="RechazarAyuda" method="post">
+                                            <input type="hidden" name="interesId" value="@i.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fa-solid fa-xmark"></i> Rechazar
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-light border text-center py-4">
+            Todavía ningún donante ha ofrecido ayuda para esta solicitud.
+        </div>
+    }
+</div>

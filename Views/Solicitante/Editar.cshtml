@@ -1,0 +1,82 @@
+@model Solicitud
+@{
+    ViewData["Title"] = "Editar solicitud";
+}
+
+<div class="container">
+    <div class="card card-dona mx-auto" style="max-width: 700px;">
+        <div class="card-body p-4">
+            <h4 class="fw-bold mb-1"><i class="fa-solid fa-pen text-danger me-2"></i>Editar solicitud</h4>
+            <p class="text-muted mb-4">Actualiza los datos de tu solicitud de sangre.</p>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <form asp-controller="Solicitante" asp-action="Editar" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="TipoSangre" class="form-label">Tipo de sangre necesario</label>
+                        <select asp-for="TipoSangre" class="form-select">
+                            @foreach (var t in Enum.GetValues<TipoSangre>())
+                            {
+                                <option value="@t" selected="@(Model.TipoSangre == t)">@t.ToDisplay()</option>
+                            }
+                        </select>
+                        <span asp-validation-for="TipoSangre" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Cantidad" class="form-label">Cantidad de unidades</label>
+                        <input asp-for="Cantidad" type="number" min="1" max="20" class="form-control" />
+                        <span asp-validation-for="Cantidad" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Ciudad" class="form-label">Ciudad</label>
+                        <input asp-for="Ciudad" class="form-control" />
+                        <span asp-validation-for="Ciudad" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Hospital" class="form-label">Hospital / Centro médico</label>
+                        <input asp-for="Hospital" class="form-control" />
+                        <span asp-validation-for="Hospital" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Fecha" class="form-label">Fecha necesaria</label>
+                        <input asp-for="Fecha" type="date" class="form-control" />
+                        <span asp-validation-for="Fecha" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Urgencia" class="form-label">Nivel de urgencia</label>
+                        <select asp-for="Urgencia" class="form-select">
+                            @foreach (var u in Enum.GetValues<NivelUrgencia>())
+                            {
+                                <option value="@u" selected="@(Model.Urgencia == u)">@u</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Descripcion" class="form-label">Descripción (opcional)</label>
+                    <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger flex-fill"><i class="fa-solid fa-floppy-disk me-1"></i>Guardar cambios</button>
+                    <a asp-controller="Solicitante" asp-action="Detalle" asp-route-id="@Model.Id" class="btn btn-outline-secondary flex-fill">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
